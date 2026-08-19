@@ -1,0 +1,87 @@
+# --- Stage 1: Build Environment ---
+FROM ubuntu:24.04 AS tc-server-builder
+#FROM ubuntu:22.04 AS tc-server-builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    gcc g++ \
+    git \
+    cmake \
+    make \
+    gcc \
+    g++ \
+    clang \
+    build-essential \
+    libssl-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libncurses5-dev \
+    libboost-all-dev \
+    default-libmysqlclient-dev \
+    p7zip-full \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /source
+
+# Clone 3.3.5-solocraft branch
+RUN git clone --depth 1 https://forgejo.serv.manware.dk/cazuchi/trinitycore-3.3.5-amager_build_mha_SQL_table_add.git . \
+    && git submodule update --init --recursive
+
+WORKDIR /source/build
+
+RUN cmake .. \
+    -DCMAKE_CXX_STANDARD=20 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+    -DCMAKE_INSTALL_PREFIX=/server \
+    -DTOOLS=1 \
+    -DSCRIPTS=static \
+    -DWITH_WARNINGS=0
+
+#RUN cmake .. \
+#    -DCMAKE_INSTALL_PREFIX=/server \
+#    -DTOOLS=1 \
+#    -DSCRIPTS=static \
+#    -DWITH_WARNINGS=0
+
+RUN make -j$(nproc) && make install
+
+# Fetch and extract the exact TDB world database file into /server
+RUN curl -L -o /tmp/tdb.7z https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.25101/TDB_full_world_335.25101_2025_10_21.7z \
+    && 7z x /tmp/tdb.7z -o/server/ \
+    && rm /tmp/tdb.7z
+
+# --- Stage 2: Runtime Image ---
+FROM ubuntu:24.04 AS runtime
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    libssl3t64 \
+    libboost-system1.83.0 \
+    libboost-filesystem1.83.0 \
+    libboost-program-options1.83.0 \
+    libboost-iostreams1.83.0 \
+    libboost-regex1.83.0 \
+    libboost-locale1.83.0 \
+    libreadline8t64 \
+    libmysqlclient21 \
+    mysql-client \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /server
+
+# Copy compiled binaries, configs, and downloaded TDB sql file
+COPY --from=tc-server-builder /server /server
+
+# Copy SQL source files required for auto-population & migrations
+COPY --from=tc-server-builder /source/sql /source/sql
+
+RUN cp /server/etc/authserver.conf.dist /server/etc/authserver.conf \
+ && cp /server/etc/worldserver.conf.dist /server/etc/worldserver.conf \
+ && sed -i 's/127\.0\.0\.1;3306;trinity;trinity/db;3306;root;root/g' /server/etc/authserver.conf \
+ && sed -i 's/127\.0\.0\.1;3306;trinity;trinity/db;3306;root;root/g' /server/etc/worldserver.conf
+
+EXPOSE 3724 8085

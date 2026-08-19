@@ -1,0 +1,59 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: tc-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - tc-db-data:/var/lib/mysql
+      - ./sql/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+  extractor:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+      target: tc-server-builder
+    container_name: tc-extractor
+    profiles: ["tools"]
+    entrypoint: ["/server/run-extractor.sh"]
+    volumes:
+      - C:\Users\mikee\Desktop\WoW_WotLK:/wow-client:ro
+      - tc-server-data:/server/data
+      - ./run-extractor.sh:/server/run-extractor.sh
+
+  authserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: tc-authserver
+    command: /server/bin/authserver -c /server/etc/authserver.conf
+    depends_on:
+      - db
+    ports:
+      - "3724:3724"
+    volumes:
+      - ./configs:/server/etc
+    restart: on-failure
+
+  worldserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: tc-worldserver
+    command: /server/bin/worldserver -c /server/etc/worldserver.conf --ah
+    depends_on:
+      - db
+    ports:
+      - "8085:8085"
+    stdin_open: true
+    tty: true
+    volumes:
+      - tc-server-data:/server/data
+      - ./configs:/server/etc
+    restart: on-failure
+
+volumes:
+  tc-db-data:
+  tc-server-data:

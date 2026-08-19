@@ -1,0 +1,20 @@
+# Use the compiled builder stage from Dockerfile.server
+FROM tc-server-builder AS extractor-source
+
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    libssl3 libboost-system1.74.0 libboost-filesystem1.74.0 \
+    libboost-program-options1.74.0 libboost-iostreams1.74.0 \
+    libmariadb3 ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /server
+COPY --from=extractor-source /server/bin /server/bin
+
+COPY run-extractor.sh /server/run-extractor.sh
+RUN chmod +x /server/run-extractor.sh
+
+ENTRYPOINT ["/server/run-extractor.sh"]
