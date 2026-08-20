@@ -26,3 +26,5 @@ Edit `realmlist.wtf` in `Data/enUS/realmlist.wtf` to point to the server `set re
 `docker restart <container_name_or_id>` to restart a container.
 
 `docker exec -it <container_name_or_id> bash` get terminal access to container.
+
+`apt update && apt install -y nano` install nano. `Ctrl+O` --> Enter --> `Ctrl+X` to save changes in Nano. `Ctrl+W` to search.
