@@ -1,6 +1,5 @@
 # --- Stage 1: Build Environment ---
 FROM ubuntu:24.04 AS tc-server-builder
-#FROM ubuntu:22.04 AS tc-server-builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
