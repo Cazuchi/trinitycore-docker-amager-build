@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libbz2-dev \
     libreadline-dev \
-    libncurses5-dev \
+    libncurses-dev \
     libboost-all-dev \
     default-libmysqlclient-dev \
     p7zip-full \
