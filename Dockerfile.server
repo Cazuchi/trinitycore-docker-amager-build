@@ -25,6 +25,11 @@ RUN apt-get update && apt-get install -y \
 RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
 RUN update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
 
+# Fetch and extract the exact TDB world database file into /server
+RUN curl -L -o /tmp/tdb.7z https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.25101/TDB_full_world_335.25101_2025_10_21.7z \
+    && 7z x /tmp/tdb.7z -o/server/ \
+    && rm /tmp/tdb.7z
+
 WORKDIR /source
 
 # Clone 3.3.5-solocraft branch
@@ -41,10 +46,6 @@ RUN cmake .. \
 
 RUN make -j$(nproc) && make install
 
-# Fetch and extract the exact TDB world database file into /server
-RUN curl -L -o /tmp/tdb.7z https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.25101/TDB_full_world_335.25101_2025_10_21.7z \
-    && 7z x /tmp/tdb.7z -o/server/ \
-    && rm /tmp/tdb.7z
 
 # --- Stage 2: Runtime Image ---
 FROM ubuntu:24.04 AS runtime
