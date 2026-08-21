@@ -46,6 +46,7 @@ RUN cmake .. \
 
 RUN make -j$(nproc) && make install
 
+COPY --chmod=+x run-extractor.sh /server/run-extractor.sh
 
 # --- Stage 2: Runtime Image ---
 FROM ubuntu:24.04 AS runtime
