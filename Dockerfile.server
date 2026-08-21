@@ -22,6 +22,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+RUN update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+RUN update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang 100
+
 WORKDIR /source
 
 # Clone 3.3.5-solocraft branch
