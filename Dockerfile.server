@@ -61,6 +61,8 @@ RUN apt-get update && apt-get install -y \
     libboost-iostreams1.83.0 \
     libboost-regex1.83.0 \
     libboost-locale1.83.0 \
+    libboost-chrono1.83.0t64 \
+    libboost-atomic1.83.0 \
     libreadline8t64 \
     libmysqlclient21 \
     mysql-client \
