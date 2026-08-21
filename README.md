@@ -20,8 +20,8 @@ Edit `realmlist.wtf` in `Data/enUS/realmlist.wtf` to point to the server `set re
 
 
 ## **Useful commands**
-`docker compose exec -it db mysql -u root -proot world` get access to run queries in the SQL database
-`SELECT * FROM characters.custom_solocraft_character_settings;` check solocraft settings per char
+`docker compose exec -it db mysql -u root -proot world` get access to run queries in the SQL database\
+`SELECT * FROM characters.custom_solocraft_character_settings;` check solocraft settings per char\
 `UPDATE characters.custom_solocraft_character_settings SET enabled = 1 WHERE guid = 1;` enable solocraft
 
 `docker restart <container_name_or_id>` to restart a container.
