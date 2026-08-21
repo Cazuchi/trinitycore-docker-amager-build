@@ -2,7 +2,7 @@ Setup steps:
 
 Point the `extractor service volume` on line 21 in `compose.yml` to the root directory of the game installation, in my case: `C:\Users\...\Desktop\WoW_WotLK:/wow-client:ro`  
 
-Run `docker compose --profile tools run extractor` in PowerShell  
+Run `docker compose --profile tools run --rm extractor` in PowerShell  
 
 Run `docker compose up -d` in PowerShell  
 
