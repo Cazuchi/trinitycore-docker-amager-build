@@ -21,7 +21,6 @@ services:
     volumes:
       - C:\Users\mikee\Desktop\WoW_WotLK:/wow-client:ro
       - tc-server-data:/server/data
-      - ./run-extractor.sh:/server/run-extractor.sh
 
   authserver:
     build:
