@@ -16,9 +16,6 @@ However, those keybindings are already used in some cases, so you can instead Ct
 Edit `realmlist.wtf` in `Data/enUS/realmlist.wtf` to point to the server `set realmlist 127.0.0.1` (Use # to comment out any existing realmlist. Only one can apply at a time.)
 
 
-
-
-
 ## **Useful commands**
 `docker compose exec -it db mysql -u root -proot world` get access to run queries in the SQL database\
 `SELECT * FROM characters.custom_solocraft_character_settings;` check solocraft settings per char\
@@ -29,3 +26,13 @@ Edit `realmlist.wtf` in `Data/enUS/realmlist.wtf` to point to the server `set re
 `docker exec -it <container_name_or_id> bash` get terminal access to container.
 
 `apt update && apt install -y nano` install nano. `Ctrl+O` --> Enter --> `Ctrl+X` to save changes in Nano. `Ctrl+W` to search.
+
+run `.pdump write mordrenn.sql Mordrenn` in-game to create a sql dump of the character, which creates the named sql files in the worldserver docker instance.
+`docker cp tc-worldserver:/server/mordrenn.sql C:\Users\mikee\Desktop\mordrenn.sql` to export the sql file to the host machine
+`docker cp C:\Users\mikee\Desktop\mordrenn_og.sql tc-worldserver:/server/mordrenn.sql` to import
+run `.pdump load mordrenn_og.sql Cazuchi Mordrennog` to import character.
+
+`.character rename <name>` in-game to rename a char on next login
+
+`.lookup item <name>` to find item IDs
+`.additem <itemID> <count>` to add items
