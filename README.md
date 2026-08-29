@@ -29,10 +29,19 @@ Edit `realmlist.wtf` in `Data/enUS/realmlist.wtf` to point to the server `set re
 
 run `.pdump write mordrenn.sql Mordrenn` in-game to create a sql dump of the character, which creates the named sql files in the worldserver docker instance.
 `docker cp tc-worldserver:/server/mordrenn.sql C:\Users\mikee\Desktop\mordrenn.sql` to export the sql file to the host machine
-`docker cp C:\Users\mikee\Desktop\mordrenn_og.sql tc-worldserver:/server/mordrenn.sql` to import
-run `.pdump load mordrenn_og.sql Cazuchi Mordrennog` to import character.
+`docker cp C:\Users\mikee\Desktop\Projects\trinitycore-docker-amager-build\sql\mordrenn_og.sql tc-worldserver:/server/mordrenn.sql` to import
+run `.pdump load mordrenn.sql Cazuchi Mordrennog` to import character.
 
 `.character rename <name>` in-game to rename a char on next login
 
 `.lookup item <name>` to find item IDs
 `.additem <itemID> <count>` to add items
+
+
+## **Testing fresh builds**
+Run `docker compose --profile tools down -v --rmi all --remove-orphans` to delete everything related to the last build
+Run `docker compose --profile tools run --rm extractor --no-cache`
+
+If you stop mid-build, some things are kept in memory. Run the following to start from scratch completely:  
+`docker image prune -f`  
+`docker builder prune -f`  

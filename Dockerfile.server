@@ -32,7 +32,7 @@ RUN curl -L -o /tmp/tdb.7z https://github.com/TrinityCore/TrinityCore/releases/d
 WORKDIR /source
 
 # Clone 3.3.5-solocraft branch
-RUN git clone --depth 1 -b add_solocraft_command https://forgejo.serv.manware.dk/sax/trinitycore-3.3.5-amager_build.git .
+RUN git clone --depth 1 -b amager_build https://forgejo.serv.manware.dk/sax/trinitycore-3.3.5-amager_build.git .
 
 WORKDIR /source/build
 
